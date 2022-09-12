@@ -1,0 +1,23 @@
+#!/bin/bash
+
+root_path='/home/elec5622'
+original_data_root=$root_path'/Original_gz/'
+data_root=$root_path'/Data/'
+package_DIR=$root_path'/Packages/'
+
+output_path=$data_root
+refImg=$package_DIR'MNI152_T1_1mm.nii.gz'
+
+
+cd $original_data_root
+subIDs=`ls`
+
+for subID in $subIDs 
+do
+	echo "Processing image "$subID
+
+	#regidly align image with MNI template
+	flirt -in $subID -ref $refImg -out $output_path$subID -dof 6
+done
+
+echo "Done."
