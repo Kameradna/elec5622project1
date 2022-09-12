@@ -24,3 +24,4 @@ Fitting SVM model...
 The training accuracy of the trained SVM is 52.24%
 The testing accuracy of the trained SVM is 51.50%
 ```
+Basically what I have noticed is that if there is only 40 training examples it is nearly impossible to get an average looking training run.
