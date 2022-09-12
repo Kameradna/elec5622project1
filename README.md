@@ -1,4 +1,4 @@
-# elec5622project1
+# ELEC5622 Signals and Health Project 1: Classifying AD patients and normal controls from brain images
 ELEC5622 Project 1 90-dim SVM classification of Alzeimers brain AAL ROI volumes using bet, fsl, sklearn
 
 Documentation for download order, setting up env
