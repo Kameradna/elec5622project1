@@ -5,9 +5,10 @@ Documentation for download order, etc
 
 To be tested once I get on a linux machine:
 ```shell
-gdown https://drive.google.com/file/d/1U8Bk_kZpOUZnXD34daumRdCuaQgxMhEo/view?usp=sharing
-gdown https://drive.google.com/file/d/1-fnKe4yjIWFnodyPP8RiyeHBKxSfxXOv/view?usp=sharing
+gdown https://drive.google.com/u/0/uc?id=1U8Bk_kZpOUZnXD34daumRdCuaQgxMhEo&export=download&confirm=t&uuid=4389a206-532a-4ff6-8d38-af73ddc5b284
+gdown https://drive.google.com/uc?id=1-fnKe4yjIWFnodyPP8RiyeHBKxSfxXOv
 
-unzip *.zip
-mv .... to be populated
+unzip '*.zip'
+mkdir -p Data/train Data/test Output/train Output/test
+
 ```
