@@ -1,9 +1,7 @@
 # elec5622project1
 ELEC5622 Project 1 90-dim SVM classification of Alzeimers brain AAL ROI volumes using bet, fsl, sklearn
 
-Documentation for download order, etc
-
-To be tested once I get on a linux machine:
+Documentation for download order, setting up env
 ```shell
 git clone https://github.com/Kameradna/elec5622project1.git
 cd elec5622project1
