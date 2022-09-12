@@ -15,3 +15,10 @@ python data_split.py
 
 ```
 And so we arrive at the beginning of the project
+```shell
+python svm.py --dummy --dummy_num 10000 --dummy_dim 40 --pca_components 2
+We have 9000 training vectors with dim 40
+Fitting SVM model...
+The training accuracy of the trained SVM is 52.24%
+The testing accuracy of the trained SVM is 51.50%
+```
