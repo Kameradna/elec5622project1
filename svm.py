@@ -51,7 +51,7 @@ def main(args):
         x_train, y_train, x_test, y_test = make_dummy_data(args)
     else:
         data_x, data_y = preprocess("dprk.csv")
-        x_train, x_test, y_train, y_test = train_test_split(data_x, data_y, test_size=args.test_size, random_state=None)
+        x_train, x_test, y_train, y_test = train_test_split(data_x, data_y, test_size=args.test_size, random_state=None,stratified=True)
     
     print("Fitting SVM model...")
     fitted_model = make_pipeline(StandardScaler(),PCA(n_components=args.pca_components),svm.SVC(C=args.C,kernel=args.kernel,degree=args.degree,gamma=args.gamma,verbose=args.verbose)).fit(x_train,y_train)
