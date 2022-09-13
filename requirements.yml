@@ -1,0 +1,10 @@
+name: elec5622project1
+channels:
+  - defaults
+dependencies:
+  - scikit-learn
+  - numpy
+  - pandas
+  - python=3.7
+  - pip
+prefix: /home/kamerad/anaconda3/envs/elec5622project1
