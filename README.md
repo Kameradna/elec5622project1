@@ -9,7 +9,7 @@ gdown https://drive.google.com/u/0/uc?id=1U8Bk_kZpOUZnXD34daumRdCuaQgxMhEo&expor
 gdown https://drive.google.com/uc?id=1-fnKe4yjIWFnodyPP8RiyeHBKxSfxXOv
 unzip '*.zip'
 mkdir -p Data/train Data/test Output/train Output/test
-conda create -n elec5622project1 python=3.7 pip scikit-learn pandas numpy --yes
+conda create -n elec5622project1 -f requirements.yml
 conda activate elec5622project1
 python data_split.py
 
@@ -29,6 +29,7 @@ Basically what I have noticed is that if there is only 40 training examples it i
 
 And overall, we want to run the
 ```shell
+split_data.py
 SkullStripping
 Registration
 TissueSegmentation
