@@ -9,7 +9,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622'
+root_path='/home/elec5622project1'
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -37,12 +37,17 @@ do
      filename="${file%%.*}"
 	#affine registration
      	echo "Register MNI template using affine transform"
+        reg_aladin -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -res MNI152_T1_native_affine.nii.gz -aff MNI2Native_affine.txt
 	#TODO
      #deformable registration
      	echo "Register MNI template using deformable transform"
+        eg_f3d -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -aff MNI2Native_affine.txt -res MNI152_T1_native_warp.nii.gz -cpp warpcoeff.nii.gz
 	#TODO
      #transform AAL atlas
     	#TODO
+        reg_resample -ref MRI_example_brain.nii.gz -flo aal.nii.gz -res transformed_aal.nii.gz -trans warpcoeff.nii.gz -inter 0
+        #should test nonzero interpolation schema, might get better values
+        #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
      #remove files no longer needed
 	#TODO
 done

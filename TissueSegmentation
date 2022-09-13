@@ -36,6 +36,14 @@ do
      	#tissue segmentation
      	base=$train_output_path$filename
      	#TODO
+        fast -S 1 -n 3 -t 1 -g -v -o MRI_example_brain MRI_example_brain.nii.gz
+        mv MRI_example_brain_seg_0.nii.gz MRI_example_csf_mask.nii.gz
+        mv MRI_example_brain_seg_1.nii.gz MRI_example_greymatter_mask.nii.gz
+        mv MRI_example_brain_seg_2.nii.gz MRI_example_whitematter_mask.nii.gz
+        rm MRI_example_brain_pve*
+
+        #and if we for some reason need original data from the greymatter regions
+        fslmaths MRI_example_greymatter_mask.nii.gz -mul MRI_example.nii.gz MRI_example_brain_greymatter.nii.gz
      	done
 
 
@@ -56,6 +64,7 @@ echo "Processing test image "$subID
      	#tissue segmentation
      	base=$test_output_path$filename
      	#TODO 
+        
 done
 
 #Please carefully check the segmented grey matter mask visually using fsleyes to ensure the result is correct.#

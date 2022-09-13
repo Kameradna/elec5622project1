@@ -9,7 +9,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622'
+root_path='/home/elec5622project1'
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
