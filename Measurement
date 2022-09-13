@@ -52,6 +52,16 @@ do
 	        #echo "i: "${i}
           	#Calculate volume and save it into csv file
  		#TODO
+                    #for general regional volumes
+            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_L_mask.nii.gz -V
+            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_R_mask.nii.gz -V
+
+            #for specifically greymatter volumes
+            fslmaths transformed_Temporal_Mid_L_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_L_mask.nii.gz
+            fslmaths transformed_Temporal_Mid_R_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_R_mask.nii.gz
+
+            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_L_mask.nii.gz -V
+            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_R_mask.nii.gz -V
      	done
 	
 	#TODO
