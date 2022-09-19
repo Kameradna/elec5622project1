@@ -9,7 +9,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622project1'
+root_path='/home/elec5622'
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -27,13 +27,14 @@ subIDs=`ls`
 for subID in $subIDs 
 do
 	echo "Processing training image "$subID
-     fileext='.nii.gz'
+	fileext='.nii.gz'
      file=$subID
      basename $file $fileext #does not remove suffix, behave like print
      filename="${file%%.*}" #suffix removed
      #skull stripping
-     #TODO
-     
+     newFile = echo $file | sed s/$fileext//g
+   echo $newFile  
+     bet $subID "$newFile-stripped" -B
 done
 
 #---- processing test images
@@ -49,7 +50,8 @@ echo "Processing test image "$subID
      	basename $file $fileext
      	filename="${file%%.*}"
      #skull stripping
-     #TODO
+     newFile = echo $file | sed s/$fileext//g
+     bet $subID "$newFile-stripped" -B
 
 done
 
