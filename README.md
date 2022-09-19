@@ -40,3 +40,11 @@ TissueSegmentation
 Measurement
 svm.py
 ```
+To summarise the whole process-
+
+- split_data does some data allocation based on whether we have labels
+- SkullStripping does some skull stripping and places the output in the output directory respective to the input (filename-stripped)
+- Registration learns the deformable registration of the AAL atlas to native space for each image and applies it (aal_to_filename_transformed)
+- TissueSegmentation segments via fast the greymatter regions from others for each image
+- Measurement finds the volume of greymatter in each ROI via looping through and using fslstats, placing the values in an output csv.
+- svm.py performs data splitting and trains an svm, perhaps some PCA or other techniques.
