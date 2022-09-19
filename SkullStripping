@@ -9,7 +9,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622'
+root_path=${PWD}
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -17,43 +17,35 @@ output_path=$root_path'/Output/'
 train_output_path=$root_path'/Output/train/'
 test_output_path=$root_path'/Output/test/'
 
-
 #=========  skull stripping ========#
 echo "=============== begin skull stripping... ========"
 #----- processing training images
 cd $data_root'train/'
-subIDs=`ls`
+echo $PWD
+subIDs=$(ls | grep ".*.nii")
 
 for subID in $subIDs 
 do
 	echo "Processing training image "$subID
-	fileext='.nii.gz'
-     file=$subID
-     basename $file $fileext #does not remove suffix, behave like print
-     filename="${file%%.*}" #suffix removed
+     input_file=$subID
+     output_file="${train_output_path}${input_file%%.*}" #suffix removed
      #skull stripping
-     newFile = echo $file | sed s/$fileext//g
-   echo $newFile  
-     bet $subID "$newFile-stripped" -B
+     bet $input_file $output_file'_strippedB.nii.gz' -B
 done
 
 #---- processing test images
 cd $data_root'test/'
-subIDs=`ls`
+subIDs=$(ls | grep ".*.nii")
 
 for subID in $subIDs 
 do
-echo "Processing test image "$subID
-
- 	fileext='.nii.gz'
-     	file=$subID
-     	basename $file $fileext
-     	filename="${file%%.*}"
+     echo "Processing test image "$subID
+     input_file=$subID
+     output_file="${test_output_path}${input_file%%.*}" #suffix removed
      #skull stripping
-     newFile = echo $file | sed s/$fileext//g
-     bet $subID "$newFile-stripped" -B
+     bet $input_file $output_file'_strippedB.nii.gz' -B
 
 done
 
 #Please carefully check each extracted brain image visually using fsleyes to ensure the result is correct. If not, please use the strategies taught in Tutorial 1 and Lab 1 to do the adjustment.#
-#==================End of Skull Stripping=======================#
+echo "==================End of Skull Stripping======================="#

@@ -8,7 +8,7 @@
 #                    |- test                     #
 #------------------------------------------------#
 
-root_path='/home/elec5622'
+root_path=${PWD}
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -22,25 +22,22 @@ aalImg=$package_DIR'aal.nii'
 echo "=============== begin registration... ========"
 
 #---- process training images
-cd $data_root'train/'
+cd $output_root'train/'
 subIDs=$(ls | grep ".*-stripped.nii.gz")
 
 for subID in $subIDs; do
    echo "Processing training image "$subID
-   refImg=$subID
-
-   fileext='.nii.gz'
-   file=$subID
-   basename $file $fileext
-   filename="${file%%.*}"
+   input_file=$subID
+   filename="${input_file%%.*}"
    #affine registration
    echo "Register MNI template using affine transform"
-   reg_aladin -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
+   reg_aladin -ref $input_file -flo $floImg -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
    #deformable registration
    echo "Register MNI template using deformable transform"
-   reg_f3d -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_native_warp.nii.gz -cpp MNI152_to_"$filename"-warpcoeff.nii.gz
+   reg_f3d -ref $input_file -flo $floImg -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_deform.nii.gz -cpp MNI152_to_"$filename"_warpcoeff.nii.gz
    #transform AAL atlas
-   reg_resample -ref "$filename"_aal.nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
+   echo "AAL to native space using deformable transform"
+   reg_resample -ref $input_file -flo $aalImg -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
    #should test nonzero interpolation schema, might get better values
    #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
    #remove files no longer needed
@@ -54,26 +51,23 @@ echo "Exiting"
 exit 0
 
 #---- process test images
-cd $data_root'test/'
+cd $output_root'test/'
 subIDs=$(ls | grep ".*-stripped.nii.gz")
 
 for subID in $subIDs; do
    echo "Processing test image "$subID
-   refImg=$subID
-
-   fileext='.nii.gz'
-   file=$subID
-   basename $file $fileext
-   filename=$file
-   filename="${file%%.*}"
+   
+   input_file=$subID
+   filename="${input_file%%.*}"
 
    echo "Register MNI template using affine transform"
-   reg_aladin -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
+   reg_aladin -ref $input_file -flo $floImg -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
    #deformable registration
    echo "Register MNI template using deformable transform"
-   reg_f3d -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_native_warp.nii.gz -cpp MNI152_to_"$filename"-warpcoeff.nii.gz
+   reg_f3d -ref $input_file -flo $floImg -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_deform.nii.gz -cpp MNI152_to_"$filename"_warpcoeff.nii.gz
    #transform AAL atlas
-   reg_resample -ref "$filename"_aal.nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
+   echo "AAL to native space using deformable transform"
+   reg_resample -ref $input_file -flo $aalImg -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
    #should test nonzero interpolation schema, might get better values
    #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
    #remove files no longer needed
