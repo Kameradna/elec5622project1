@@ -2,6 +2,10 @@
 ELEC5622 Project 1 90-dim SVM classification of Alzeimers brain AAL ROI volumes using bet, fsl, sklearn
 
 Documentation for download order, setting up env
+
+I have hosted some files on google drive to facilitate fewer canvas logins. 
+
+https://drive.google.com/drive/folders/1fUGN2zkqs1PSAZGUVG5OLzHMMmE9350N?usp=sharing
 ```shell
 git clone https://github.com/Kameradna/elec5622project1.git
 cd elec5622project1
