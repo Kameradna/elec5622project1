@@ -15,6 +15,7 @@ package_DIR=$root_path'/Packages/'
 output_path=$root_path'/Output/'
 train_output_path=$root_path'/Output/train/'
 test_output_path=$root_path'/Output/test/'
+
 floImg=$package_DIR'MNI152_T1_1mm_brain.nii'
 aalImg=$package_DIR'aal.nii'
 
@@ -22,9 +23,9 @@ aalImg=$package_DIR'aal.nii'
 echo "=============== begin registration... ========"
 
 #---- process training images
-cd $output_root'train/'
-subIDs=$(ls | grep ".*-stripped.nii.gz")
-
+cd $output_path'train/'
+subIDs=$(ls | grep ".*_stripped.nii.gz")
+echo $PWD
 for subID in $subIDs; do
    echo "Processing training image "$subID
    input_file=$subID
@@ -52,7 +53,7 @@ exit 0
 
 #---- process test images
 cd $output_root'test/'
-subIDs=$(ls | grep ".*-stripped.nii.gz")
+subIDs=$(ls | grep ".*_stripped.nii.gz")
 
 for subID in $subIDs; do
    echo "Processing test image "$subID

@@ -30,7 +30,7 @@ do
      input_file=$subID
      output_file="${train_output_path}${input_file%%.*}" #suffix removed
      #skull stripping
-     bet $input_file $output_file'_strippedB.nii.gz' -B
+     bet $input_file $output_file'_stripped.nii.gz' -B
 done
 
 #---- processing test images
@@ -43,7 +43,7 @@ do
      input_file=$subID
      output_file="${test_output_path}${input_file%%.*}" #suffix removed
      #skull stripping
-     bet $input_file $output_file'_strippedB.nii.gz' -B
+     bet $input_file $output_file'_stripped.nii.gz' -B
 
 done
 
