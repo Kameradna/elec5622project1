@@ -8,8 +8,7 @@
 #                    |- test                     #
 #------------------------------------------------#
 
-
-root_path='/home/elec5622project1'
+root_path='/home/elec5622'
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -24,63 +23,62 @@ echo "=============== begin registration... ========"
 
 #---- process training images
 cd $data_root'train/'
-subIDs=`ls`
+subIDs=$(ls | grep ".*-stripped.nii.gz")
 
-for subID in $subIDs 
-do
-   	echo "Processing training image "$subID
-     	refImg=$subID
+for subID in $subIDs; do
+   echo "Processing training image "$subID
+   refImg=$subID
 
-     fileext='.nii.gz'
-     file=$subID
-     basename $file $fileext
-     filename="${file%%.*}"
-	#affine registration
-     	echo "Register MNI template using affine transform"
-        reg_aladin -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -res MNI152_T1_native_affine.nii.gz -aff MNI2Native_affine.txt
-	#TODO
-     #deformable registration
-     	echo "Register MNI template using deformable transform"
-        reg_f3d -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -aff MNI2Native_affine.txt -res MNI152_T1_native_warp.nii.gz -cpp warpcoeff.nii.gz
-	#TODO
-     #transform AAL atlas
-    	#TODO
-        reg_resample -ref MRI_example_brain.nii.gz -flo aal.nii.gz -res transformed_aal.nii.gz -trans warpcoeff.nii.gz -inter 0
-        #should test nonzero interpolation schema, might get better values
-        #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
-     #remove files no longer needed
-	#TODO
+   fileext='.nii.gz'
+   file=$subID
+   basename $file $fileext
+   filename="${file%%.*}"
+   #affine registration
+   echo "Register MNI template using affine transform"
+   reg_aladin -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
+   #deformable registration
+   echo "Register MNI template using deformable transform"
+   reg_f3d -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_native_warp.nii.gz -cpp MNI152_to_"$filename"-warpcoeff.nii.gz
+   #transform AAL atlas
+   reg_resample -ref "$filename"_aal.nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
+   #should test nonzero interpolation schema, might get better values
+   #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
+   #remove files no longer needed
+   #TODO
+   echo "TODO: Remove temp files"
+   ls
 done
+
+echo "Exiting"
+
+exit 0
 
 #---- process test images
 cd $data_root'test/'
-subIDs=`ls`
+subIDs=$(ls | grep ".*-stripped.nii.gz")
 
-for subID in $subIDs 
-do
-   	echo "Processing test image "$subID
-     	refImg=$subID
+for subID in $subIDs; do
+   echo "Processing test image "$subID
+   refImg=$subID
 
-     fileext='.nii.gz'
-     file=$subID
-     basename $file $fileext
-     filename=$file
-     filename="${file%%.*}"
+   fileext='.nii.gz'
+   file=$subID
+   basename $file $fileext
+   filename=$file
+   filename="${file%%.*}"
 
-	#affine registration
-     	echo "Register MNI template using affine transform"
-        reg_aladin -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -res MNI152_T1_native_affine.nii.gz -aff MNI2Native_affine.txt
-	#TODO
-     #deformable registration
-     	echo "Register MNI template using deformable transform"
-        eg_f3d -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -aff MNI2Native_affine.txt -res MNI152_T1_native_warp.nii.gz -cpp warpcoeff.nii.gz
-	#TODO
-     #transform AAL atlas
-    	#TODO
-        reg_resample -ref MRI_example_brain.nii.gz -flo aal.nii.gz -res transformed_aal.nii.gz -trans warpcoeff.nii.gz -inter 0
-        #should test nonzero interpolation schema, might get better values
-        #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
-     #remove files no longer needed
-	#TODO
+   echo "Register MNI template using affine transform"
+   reg_aladin -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res MNI152_to_"$filename"_affine.nii.gz -aff MNI152_to_"$filename"_affine.txt
+   #deformable registration
+   echo "Register MNI template using deformable transform"
+   reg_f3d -ref "$filename".nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -aff MNI152_to_"$filename"_affine.txt -res MNI152_to_"$filename"_native_warp.nii.gz -cpp MNI152_to_"$filename"-warpcoeff.nii.gz
+   #transform AAL atlas
+   reg_resample -ref "$filename"_aal.nii.gz -flo ../MNI152_T1_1mm_brain.nii.gz -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
+   #should test nonzero interpolation schema, might get better values
+   #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
+   #remove files no longer needed
+   #TODO
+   echo "TODO: Remove temp files"
+   ls
 done
 #==================== End of registration ===============#
