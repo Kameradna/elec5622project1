@@ -52,19 +52,12 @@ do
 	        #echo "i: "${i}
           	#Calculate volume and save it into csv file
  		#TODO
-                    #for general regional volumes
-            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_L_mask.nii.gz -V
-            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_R_mask.nii.gz -V
-
-            #for specifically greymatter volumes
-            fslmaths transformed_Temporal_Mid_L_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_L_mask.nii.gz
-            fslmaths transformed_Temporal_Mid_R_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_R_mask.nii.gz
-
-            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_L_mask.nii.gz -V
-            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_R_mask.nii.gz -V
+	fslmaths aal_transformed.nii.gz -thr $i -uthr $i -bin "$file"_"$i"_ROImask.nii.gz 
+	
+	    fslstats greymatter_mask -k ROI_mask -V >> ${train_output_path}"AAL_statistics_volumn_train.csv"
      	done
 	
-	#TODO
+	echo "\n" >> ${train_output_path}"AAL_statistics_volumn_train.csv"
 
     	rm '-rf' $seedMask_path   
      	cd $data_root'train/'
