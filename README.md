@@ -18,7 +18,7 @@ conda activate elec5622project1
 python data_split.py
 
 ```
-And so we arrive at the beginning of the project
+And so we arrive at the beginning of the project. With 90-dim dummy random data, we get insane overfitting so radical 90 to 2 pca must be undertaken to allow for reasonable model parameters.
 ```shell
 python svm.py --dummy --dummy_num 10000 --dummy_dim 40 --pca_components 2
 ```
