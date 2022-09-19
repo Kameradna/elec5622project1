@@ -23,7 +23,7 @@ echo "=============== begin grey matter segmentation...========"
 
 #----- processing training images
 cd $data_root'train/'
-subIDs=`ls`
+subIDs=$(ls | grep ".*-stripped.nii.gz")
 
 for subID in $subIDs 
 do
@@ -36,7 +36,7 @@ do
      	#tissue segmentation
      	base=$train_output_path$filename
      	#TODO
-        fast -S 1 -n 3 -t 1 -g -v -o MRI_example_brain MRI_example_brain.nii.gz
+        fast -S 1 -n 3 -t 1 -g -v -o MRI_example_brain $filename.nii.gz
         mv MRI_example_brain_seg_0.nii.gz MRI_example_csf_mask.nii.gz
         mv MRI_example_brain_seg_1.nii.gz MRI_example_greymatter_mask.nii.gz
         mv MRI_example_brain_seg_2.nii.gz MRI_example_whitematter_mask.nii.gz
