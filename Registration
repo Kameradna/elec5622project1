@@ -41,7 +41,7 @@ do
 	#TODO
      #deformable registration
      	echo "Register MNI template using deformable transform"
-        eg_f3d -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -aff MNI2Native_affine.txt -res MNI152_T1_native_warp.nii.gz -cpp warpcoeff.nii.gz
+        reg_f3d -ref $filename -flo MNI152_T1_1mm_brain.nii.gz -aff MNI2Native_affine.txt -res MNI152_T1_native_warp.nii.gz -cpp warpcoeff.nii.gz
 	#TODO
      #transform AAL atlas
     	#TODO
