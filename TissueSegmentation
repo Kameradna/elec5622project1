@@ -10,7 +10,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622'
+root_path=${PWD}
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -22,57 +22,56 @@ test_output_path=$root_path'/Output/test/'
 echo "=============== begin grey matter segmentation...========"
 
 #----- processing training images
-cd $data_root'train/'
-subIDs=$(ls | grep ".*-stripped.nii.gz")
+cd $output_path'train/'
+subIDs=$(ls | grep ".*_stripped.nii.gz")
 
 for subID in $subIDs 
 do
 	echo "Processing training image "$subID
-     	fileext='.nii.gz'
-     	file=$subID
-    	basename $file $fileext
-     	filename="${file%%.*}"
+	file=$subID
+	filename="${file%%.*}"
+	if [[ ! -f "$filename"_greymatter_mask.nii.gz ]] #if the process has not already been done to completion
+	then
+		#tissue segmentation
+		fast -S 1 -n 3 -t 1 -g -v -o $filename $filename.nii.gz
+		mv "$filename"_seg_0.nii.gz "$filename"_seg_2.nii.gz intermediate_files
+		mv "$filename"_seg_1.nii.gz "$filename"_greymatter_mask.nii.gz
+		rm "$filename"_pve*
 
-     	#tissue segmentation
-     	base=$train_output_path$filename
-     	#TODO
-        fast -S 1 -n 3 -t 1 -g -v -o MRI_example_brain $filename.nii.gz
-        mv MRI_example_brain_seg_0.nii.gz MRI_example_csf_mask.nii.gz
-        mv MRI_example_brain_seg_1.nii.gz MRI_example_greymatter_mask.nii.gz
-        mv MRI_example_brain_seg_2.nii.gz MRI_example_whitematter_mask.nii.gz
-        rm MRI_example_brain_pve*
-
-        #and if we for some reason need original data from the greymatter regions
-        fslmaths MRI_example_greymatter_mask.nii.gz -mul MRI_example.nii.gz MRI_example_brain_greymatter.nii.gz
-     	done
+		#and if we for some reason need original data from the greymatter regions
+		# fslmaths "$filename"_greymatter_mask.nii.gz -mul "$filename".nii.gz "$filename"_greymatter.nii.gz
+	fi
+	if [[ -f "$filename"_greymatter_mask.nii.gz ]]
+	then
+		echo "Finished processing "$file
+	fi
+done
 
 
 #---- processing test images
-cd $data_root'test/'
-subIDs=`ls`
+cd $output_path'test/'
+subIDs=$(ls | grep ".*_stripped.nii.gz")
 
 for subID in $subIDs 
 do
-echo "Processing test image "$subID
+	echo "Processing test image "$subID
+	file=$subID
+	filename="${file%%.*}"
+	if [[ ! -f "$filename"_greymatter_mask.nii.gz ]] #if the process has not already been done to completion
+	then
+		#tissue segmentation
+		fast -S 1 -n 3 -t 1 -g -v -o $filename $filename.nii.gz
+		mv "$filename"_seg_0.nii.gz "$filename"_seg_2.nii.gz intermediate_files
+		mv "$filename"_seg_1.nii.gz "$filename"_greymatter_mask.nii.gz
+		rm "$filename"_pve*
 
-     	fileext='.nii.gz'
-     	file=$subID
-     	basename $file $fileext
-     	filename=$file
-     	filename="${file%%.*}"
-
-     	#tissue segmentation
-     	base=$test_output_path$filename
-     	#TODO
-        fast -S 1 -n 3 -t 1 -g -v -o MRI_example_brain MRI_example_brain.nii.gz
-        mv MRI_example_brain_seg_0.nii.gz MRI_example_csf_mask.nii.gz
-        mv MRI_example_brain_seg_1.nii.gz MRI_example_greymatter_mask.nii.gz
-        mv MRI_example_brain_seg_2.nii.gz MRI_example_whitematter_mask.nii.gz
-        rm MRI_example_brain_pve*
-
-        #and if we for some reason need original data from the greymatter regions
-        fslmaths MRI_example_greymatter_mask.nii.gz -mul MRI_example.nii.gz MRI_example_brain_greymatter.nii.gz
-        
+		#and if we for some reason need original data from the greymatter regions
+		# fslmaths "$filename"_greymatter_mask.nii.gz -mul "$filename".nii.gz "$filename"_greymatter.nii.gz
+	fi
+	if [[ -f "$filename"_greymatter_mask.nii.gz ]]
+	then
+		echo "Finished processing "$file
+	fi
 done
 
 #Please carefully check the segmented grey matter mask visually using fsleyes to ensure the result is correct.#

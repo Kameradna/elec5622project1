@@ -29,8 +29,11 @@ do
 	echo "Processing training image "$subID
      input_file=$subID
      output_file="${train_output_path}${input_file%%.*}" #suffix removed
-     #skull stripping
-     bet $input_file $output_file'_stripped.nii.gz' -B
+     if [[ ! -f $output_file'_stripped.nii.gz' ]] #if the process has not already been done to completion
+     then
+          #skull stripping
+          bet $input_file $output_file'_stripped.nii.gz' -B
+     fi
 done
 
 #---- processing test images
