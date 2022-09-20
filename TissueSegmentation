@@ -46,6 +46,13 @@ do
 		echo "Finished processing "$file
 	fi
 done
+mkdir intermediate_files -p
+for subID in $subIDs; do
+   echo "Cleaning up after "$subID
+   input_file=$subID
+   filename="${input_file%%.*}"
+   mv $input_file "$filename"_mixeltype.nii.gz "$filename"_seg.nii.gz intermediate_files
+done
 
 
 #---- processing test images
@@ -73,6 +80,12 @@ do
 		echo "Finished processing "$file
 	fi
 done
-
+mkdir intermediate_files -p
+for subID in $subIDs; do
+   echo "Cleaning up after "$subID
+   input_file=$subID
+   filename="${input_file%%.*}"
+   mv $input_file "$filename"_mixeltype.nii.gz "$filename"_seg.nii.gz intermediate_files
+done
 #Please carefully check the segmented grey matter mask visually using fsleyes to ensure the result is correct.#
 #============= End of Grey matter segmentation=================#
