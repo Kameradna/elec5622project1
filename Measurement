@@ -9,7 +9,7 @@
 #------------------------------------------------#
 
 
-root_path='/home/elec5622'
+root_path=${PWD}
 data_root=$root_path'/Data/'
 package_DIR=$root_path'/Packages/'
 
@@ -18,99 +18,76 @@ train_output_path=$root_path'/Output/train/'
 test_output_path=$root_path'/Output/test/'
 floImg=$package_DIR'MNI152_T1_1mm_brain.nii'
 aalImg=$package_DIR'aal.nii'
+ROI_no=90
 
 #====================  measurement =======================#
 echo "=============== begin measurement... ========"
 
 #----- processing training images
-cd $data_root'train/'
-subIDs=`ls`
+cd $output_path'train/'
+subIDs=$(ls | grep ".*_stripped_greymatter_mask.nii.gz")
 
 for subID in $subIDs 
 do
 	echo "Processing training image "$subID
-     fileext='.nii.gz'
-     file=$subID
-     basename $file $fileext
-     filename="${file%%.*}"
- 
-
-  
-     subGMMask=$train_output_path$filename'_greymatter_mask.nii.gz'
-
-     echo " >>>> Create measurements for "$filename"  <<<<<<"
-     source ${root_path}/CreateSeedMask $train_output_path 'AAL_to_'$filename$fileext 
-	echo "i am done!"
-     seedMask_path=$train_output_path'seedMasks/'
- 	cd $seedMask_path
-	mask_IMGs=`ls | wc -l`	
+     gmmask=$subID
+     basename=$( echo $gmmask | sed 's/_stripped_greymatter_mask.nii.gz//' )
+     echo $basename
+     aalmask="aal_to_"$basename"_stripped_transformed.nii.gz"
+     echo $aalmask
             
-     echo -n $filename >> ${train_output_path}"AAL_statistics_volumn_train.csv"
+     echo -n $basename >> ${train_output_path}"AAL_statistics_volumn_train.csv"
 
-	for i in $(eval echo {1..$mask_IMGs}); 
+	for i in $(eval echo {1..$ROI_no}); 
 	do
-	        #echo "i: "${i}
-          	#Calculate volume and save it into csv file
- 		#TODO
-		fslmaths aal_transformed.nii.gz -thr $i -uthr $i -bin "$file"_"$i"_ROImask.nii.gz 
-	
-		fslstats greymatter_mask -k ROI_mask -V >> ${train_output_path}"AAL_statistics_volumn_train.csv"
+	     echo "i: "${i}
+
+		fslmaths $aalmask -thr $i -uthr $i -bin $basename"_"$i"_aalROImask.nii.gz"
+		output=$( fslstats $gmmask -k $basename"_"$i"_aalROImask.nii.gz" -V )
+          for item in $output;
+          do
+               echo -n ", "$item >> ${train_output_path}"AAL_statistics_volumn_train.csv"
+          done
 		#where will this put the voxel vs not voxel items?
+          rm $basename"_"$i"_aalROImask.nii.gz"
 	done
 	
-	echo "\n" >> ${train_output_path}"AAL_statistics_volumn_train.csv"
-	#pls confirm this will end the column
-	
-    	rm '-rf' $seedMask_path   
-     	cd $data_root'train/'
+	echo "" >> ${train_output_path}"AAL_statistics_volumn_train.csv"
+	#this will end the column
 
 done
-
+exit 1
 #----- processing test images
-cd $data_root'test/'
-subIDs=`ls`
+cd $output_path'test/'
+subIDs=$(ls | grep ".*_stripped_greymatter_mask.nii.gz")
 
 for subID in $subIDs 
 do
-	echo "Processing test image "$subID
-     fileext='.nii.gz'
-     file=$subID
-     basename $file $fileext
-     filename="${file%%.*}"
-
-     subGMMask=$test_output_path$filename'_greymatter_mask.nii.gz'
-
-     echo " >>>> Create measurements for "$filename"  <<<<<<"
-     source ${root_path}/CreateSeedMask $test_output_path 'AAL_to_'$filename$fileext 
-
-     seedMask_path=$test_output_path'seedMasks/'
- 	cd $seedMask_path
-	mask_IMGs=`ls | wc -l`	
+	echo "Processing testing image "$subID
+     gmmask=$subID
+     basename=$( echo $gmmask | sed 's/_stripped_greymatter_mask.nii.gz//' )
+     echo $basename
+     aalmask="aal_to_"$basename"_stripped_transformed.nii.gz"
+     echo $aalmask
             
-     echo -n $filename >> ${test_output_path}"AAL_statistics_volumn_test.csv"
+     echo -n $basename >> ${test_output_path}"AAL_statistics_volumn_test.csv"
 
-	for i in $(eval echo {1..$mask_IMGs}); 
+	for i in $(eval echo {1..$ROI_no}); 
 	do
-          	#echo "i: "${i}
-          	#Calculate volume and save it into csv file
-          	#TODO
-            #for general regional volumes
-            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_L_mask.nii.gz -V
-            fslstats MRI_example_brain.nii.gz -k transformed_Temporal_Mid_R_mask.nii.gz -V
+	     echo "i: "${i}
 
-            #for specifically greymatter volumes
-            fslmaths transformed_Temporal_Mid_L_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_L_mask.nii.gz
-            fslmaths transformed_Temporal_Mid_R_mask.nii.gz -mul MRI_example_greymatter_mask.nii.gz MRI_example_greymatter_Temp_R_mask.nii.gz
-
-            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_L_mask.nii.gz -V
-            fslstats MRI_example_brain.nii.gz -k MRI_example_greymatter_Temp_R_mask.nii.gz -V
-     	done
-	#TODO
-
-
-     rm '-rf' $seedMask_path   
-     cd $data_root'test/'
-         
+		fslmaths $aalmask -thr $i -uthr $i -bin $basename"_"$i"_aalROImask.nii.gz"
+		output=$( fslstats $gmmask -k $basename"_"$i"_aalROImask.nii.gz" -V )
+          for item in $output;
+          do
+               echo -n ", "$item >> ${test_output_path}"AAL_statistics_volumn_test.csv"
+          done
+		#where will this put the voxel vs not voxel items?
+          rm $basename"_"$i"_aalROImask.nii.gz"
+	done
+	
+	echo "" >> ${test_output_path}"AAL_statistics_volumn_test.csv"
+	#this will end the column
 done
 
 
