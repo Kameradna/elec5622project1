@@ -109,5 +109,3 @@ if __name__ == "__main__":
     parser.add_argument("--dummy_dim", type=int, default=100, help="dimension of dummy data to produce")
     args = parser.parse_args()
     main(args)
-    
-
