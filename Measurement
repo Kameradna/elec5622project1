@@ -26,7 +26,8 @@ echo "=============== begin measurement... ========"
 #----- processing training images
 cd $output_path'train/'
 subIDs=$(ls | grep ".*_stripped_greymatter_mask.nii.gz")
-
+if [[ ! -f "AAL_statistics_volumn_train.csv" ]]
+then
 for subID in $subIDs 
 do
 	echo "Processing training image "$subID
@@ -56,11 +57,12 @@ do
 	#this will end the column
 
 done
-exit 1
+fi
 #----- processing test images
 cd $output_path'test/'
 subIDs=$(ls | grep ".*_stripped_greymatter_mask.nii.gz")
-
+if [[ ! -f "AAL_statistics_volumn_test.csv" ]]
+then
 for subID in $subIDs 
 do
 	echo "Processing testing image "$subID
@@ -89,6 +91,6 @@ do
 	echo "" >> ${test_output_path}"AAL_statistics_volumn_test.csv"
 	#this will end the column
 done
-
+fi
 
 #==================== End of measurement  =========#
