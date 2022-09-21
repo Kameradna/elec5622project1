@@ -13,7 +13,7 @@ gdown https://drive.google.com/u/0/uc?id=1U8Bk_kZpOUZnXD34daumRdCuaQgxMhEo&expor
 gdown https://drive.google.com/uc?id=1-fnKe4yjIWFnodyPP8RiyeHBKxSfxXOv
 unzip '*.zip'
 mkdir -p Data/train Data/test Output/train Output/test
-conda create -n elec5622project1 -f requirements.yml
+conda create -n elec5622project1 -f requirementsbasic.yml #or full
 conda activate elec5622project1
 python data_split.py
 
