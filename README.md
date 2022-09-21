@@ -18,6 +18,9 @@ conda activate elec5622project1
 python data_split.py
 
 ```
+Additionally, we need fsleyes and nifty-reg to complete the skullstripping and registration, and measurements. Clone the niftyreg github and compile for your system following the install guide (ccmake, make, make install, add lines to .bashrc). Install fsleyes via conda. You may need to get conda-forge as a source for installation of fsleyes, guides are available.
+
+
 And so we arrive at the beginning of the project. With 90-dim dummy random data, we get insane overfitting so radical 90 to 2 pca must be undertaken to allow for reasonable model parameters.
 ```shell
 python svm.py --dummy --dummy_num 10000 --dummy_dim 40 --pca_components 2
@@ -48,3 +51,10 @@ To summarise the whole process-
 - TissueSegmentation segments via fast the greymatter regions from others for each image
 - Measurement finds the volume of greymatter in each ROI via looping through and using fslstats, placing the values in an output csv.
 - svm.py performs data splitting and trains an svm, perhaps some PCA or other techniques.
+
+
+With the actual data, PCA makes no difference unless you use 1 single component. Any other training scheme will net you 100% training accuracy. The conclusions for the test set are unchanged for most training schema.
+
+{'Data_40': 1, 'Data_41': -1, 'Data_42': 1, 'Data_43': -1, 'Data_44': 1, 'Data_45': -1, 'Data_46': 1, 'Data_47': 1, 'Data_48': 1, 'Data_49': 1}
+
+Where 1 is Alzeimer's and -1 is normal control.
