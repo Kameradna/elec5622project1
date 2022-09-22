@@ -1,0 +1,4 @@
+bash SkullStripping
+bash Registration
+bash TissueSegmentation
+bash Measurement

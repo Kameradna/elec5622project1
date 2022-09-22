@@ -32,7 +32,7 @@ do
      if [[ ! -f $output_file'_stripped.nii.gz' ]] #if the process has not already been done to completion
      then
           #skull stripping
-          bet $input_file $output_file'_stripped.nii.gz' -B
+          bet $input_file $output_file'_stripped.nii.gz' -f 0.3 -B
      fi
 done
 
@@ -46,7 +46,7 @@ do
      input_file=$subID
      output_file="${test_output_path}${input_file%%.*}" #suffix removed
      #skull stripping
-     bet $input_file $output_file'_stripped.nii.gz' -B
+     bet $input_file $output_file'_stripped.nii.gz' -f 0.3 -B
 
 done
 
