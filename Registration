@@ -40,10 +40,10 @@ for subID in $subIDs; do
       #transform AAL atlas
       echo "AAL to native space using deformable transform"
       reg_resample -ref $input_file -flo $aalImg -res aal_to_"$filename"_transformed.nii.gz -trans MNI152_to_"$filename"_warpcoeff.nii.gz -inter 0
-      #should test nonzero interpolation schema, might get better values
-      #then we need to extract the regions of interest based on intensity I guess, create individual masks for each, and calculate the volume of either them, or the included greymatter
-      #remove files no longer needed
-      #TODO
+      # should test nonzero interpolation schema, might get better values
+      # then we need to extract the regions of interest based on intensity I guess, create individual masks for each, 
+      # and calculate the volume of either them, or the included greymatter
+
    fi
    if [[ -f aal_to_"$filename"_transformed.nii.gz ]]
    then

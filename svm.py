@@ -62,6 +62,7 @@ def main(args):
             x_train, y_train = data_x, data_y
     
     print("Fitting SVM model...")
+    print(f"Using {len(x_val)} validation items out of {len(data_x)}")
     model = make_pipeline(StandardScaler(),PCA(n_components=args.pca_components),svm.SVC(C=args.C,kernel=args.kernel,degree=args.degree,gamma=args.gamma,verbose=args.verbose))
 
     if args.k_fold is not None:#not working
@@ -77,7 +78,7 @@ def main(args):
         validation_score = fitted_model.score(x_val, y_val)
         print(f'The validation accuracy of the trained SVM is {100*validation_score:.2f}%')
 
-
+    print("# Testing phase #")
     if args.test_path is not None:
         test_x, _, names = preprocess(args.test_path)
         y_pred = fitted_model.predict(test_x)
@@ -85,6 +86,34 @@ def main(args):
         for idx, name in enumerate(names):
             predictions[name] = y_pred[idx]
         print(predictions)
+
+    if args.multi_run > 0:
+        aggregate_predictions = {}
+        for idx, name in enumerate(names):
+            aggregate_predictions[name] = []
+
+        for i in range(args.multi_run):#rep this args.multi_run times
+            for args.val_size in range(len(data_x)//2):
+                for args.pca_components in range(1, len(data_x)//2):
+                    '''
+                    Resplit the data each run, then fit and test the data, recording results.
+                    '''
+                    if args.val_size > 1:
+                        x_train, x_val, y_train, y_val = train_test_split(data_x, data_y, test_size=args.val_size, random_state=None,stratify=data_y)
+                    else:
+                        x_train, y_train = data_x, data_y
+                    model = make_pipeline(StandardScaler(),PCA(n_components=args.pca_components),svm.SVC(C=args.C,kernel=args.kernel,degree=args.degree,gamma=args.gamma,verbose=args.verbose))
+                    fitted_model = model.fit(x_train,y_train)
+                    y_pred = fitted_model.predict(test_x)
+                    for idx, name in enumerate(names):
+                        aggregate_predictions[name].append(y_pred[idx])
+        
+        aggregate_predictions = {name: np.mean(aggregate_predictions[name]) for name in aggregate_predictions}
+        print(aggregate_predictions)
+
+        for name in aggregate_predictions:
+            print(f"{name}, {aggregate_predictions[name]}")
+            
 
 
 if __name__ == "__main__":
@@ -101,7 +130,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--path", type=str, default="dprk.csv", help="relative path to csv")
     parser.add_argument("--test_path", type=str, default=None, help="relative path to csv")
-    parser.add_argument("--multi_run", type=int, default=None, help="multi runs and report the most popular")
+    parser.add_argument("--multi_run", type=int, default=0, help="multi runs and report the most popular")
     parser.add_argument("--k_fold", type=int, default=None, help="k-fold cross validation?")
 
     parser.add_argument("--dummy",default=False,action="store_true", help="use dummy data?")
