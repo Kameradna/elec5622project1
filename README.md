@@ -60,5 +60,6 @@ With the actual data, PCA makes no difference unless you use 1 single component.
 Where 1 is Alzeimer's and -1 is normal control.
 
 ![image](https://user-images.githubusercontent.com/48018617/191641669-90be4f20-4020-4c14-83a1-e5bcb38c2460.png)
-It was at this time that we realised that our use of -B had aggressively trimmed parts of the alzeimers examples. See Figure, the grey area is the original -B flag, the yellow is the extent of using -B -f 0.4 and the green is the extent of using the appropriate -B -f 0.3 flags. We shall rerun all with this stripping scheme.
+It was at this time that we realised that our use of -B had aggressively trimmed parts of the alzeimers examples. See Figure, the grey area is the original -B flag, the yellow is the extent of using -B -f 0.4 and the green is the extent of using the appropriate -B -f 0.3 flags.
 
+This gives us much superior whole brain stripping.
