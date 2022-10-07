@@ -33,6 +33,7 @@ The testing accuracy of the trained SVM is 51.50%
 ```
 Basically what I have noticed is that if there is only 40 training examples it is nearly impossible to get an average looking training run.
 
+We shall see that this does not apply to the training data; it is much more well-ordered and easier to fit without feature distillation.
 
 And overall, we want to run the
 ```shell
@@ -69,3 +70,5 @@ Please see
 https://docs.google.com/document/d/1UlpbdiSW4BPbwtR_XmVtZBWiCfKKnzo_JsbnkxytzUk/edit?usp=sharing
 
 for the full report.
+
+Have fun with this repo!
