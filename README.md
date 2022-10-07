@@ -63,3 +63,9 @@ Where 1 is Alzeimer's and -1 is normal control.
 It was at this time that we realised that our use of -B had aggressively trimmed parts of the alzeimers examples. See Figure, the grey area is the original -B flag, the yellow is the extent of using -B -f 0.4 and the green is the extent of using the appropriate -B -f 0.3 flags.
 
 This gives us much superior whole brain stripping.
+
+Please see
+
+https://docs.google.com/document/d/1UlpbdiSW4BPbwtR_XmVtZBWiCfKKnzo_JsbnkxytzUk/edit?usp=sharing
+
+for the full report.
