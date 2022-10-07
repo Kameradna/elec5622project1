@@ -33,7 +33,7 @@ def make_dummy_data(args):
     return x_train, y_train, x_test, y_test
 
 
-def preprocess(path="dprk.csv"):
+def preprocess(path="dprk.csv",offset=0):
     with open(path) as f:
         csv_data = reader(f, delimiter=",")
         raw_data = np.array(list(csv_data))
@@ -42,7 +42,7 @@ def preprocess(path="dprk.csv"):
     names = []
     tuple_len = raw_data.shape[1]
     for row in raw_data:
-        data_x.append([j for j in row[2:tuple_len:2]])#grabbing every second column so we capture only the mm cubed readings
+        data_x.append([j for j in row[2+offset:tuple_len:2]])#grabbing every second column so we capture only the mm cubed readings
         data_y.append(1 if row[0][0:2] == "AD" else -1)
         names.append(row[0])
     # print(data_x, data_y)
@@ -55,7 +55,7 @@ def main(args):
     if args.dummy:
         x_train, y_train, x_test, y_test = make_dummy_data(args)
     else:
-        data_x, data_y, _ = preprocess(args.path)
+        data_x, data_y, _ = preprocess(args.path,0)
         if args.val_size > 0:
             x_train, x_val, y_train, y_val = train_test_split(data_x, data_y, test_size=args.val_size, random_state=None,stratify=data_y)
         else:
@@ -80,7 +80,7 @@ def main(args):
 
     print("# Testing phase #")
     if args.test_path is not None:
-        test_x, _, names = preprocess(args.test_path)
+        test_x, _, names = preprocess(args.test_path,0)
         y_pred = fitted_model.predict(test_x)
         predictions = {}
         for idx, name in enumerate(names):
